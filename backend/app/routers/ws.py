@@ -63,6 +63,23 @@ async def mobile_ws(websocket: WebSocket):
                         await hub.send_to_agent(device_id, {"type": "screen_unsubscribe"})
                     except ConnectionError:
                         pass
+            elif msg_type == "remote_click" and device_id:
+                # Solo se puede clickear un dispositivo cuya pantalla se esta
+                # mirando en este momento -- nunca a ciegas.
+                if user_id not in hub.screen_subscribers.get(device_id, set()):
+                    continue
+                try:
+                    await hub.send_to_agent(
+                        device_id,
+                        {
+                            "type": "remote_click",
+                            "x": float(msg.get("x", 0.5)),
+                            "y": float(msg.get("y", 0.5)),
+                            "button": msg.get("button", "left"),
+                        },
+                    )
+                except (ConnectionError, TypeError, ValueError):
+                    pass
     except (WebSocketDisconnect, asyncio.TimeoutError):
         pass
     finally:

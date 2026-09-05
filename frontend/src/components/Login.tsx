@@ -15,8 +15,8 @@ export function Login({ onLoggedIn }: { onLoggedIn: () => void }) {
       const res = await api.login(email, password);
       setToken(res.access_token);
       onLoggedIn();
-    } catch {
-      setError("Credenciales inválidas");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error desconocido");
     } finally {
       setLoading(false);
     }

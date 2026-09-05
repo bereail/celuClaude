@@ -60,3 +60,9 @@ screenshot_enabled: false
 screenshot_interval_seconds: 0.4
 screenshot_max_width: 900
 screenshot_quality: 55
+
+# Control remoto de mouse (tap en el espejo de pantalla mueve el mouse y
+# hace click ahi). Interruptor maestro igual que screenshot_enabled: en
+# false, un backend comprometido no puede mover el mouse aunque lo pida.
+# Solo actua ademas mientras streaming_active esta activo (alguien mirando).
+remote_control_enabled: false

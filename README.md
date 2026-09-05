@@ -25,7 +25,8 @@ Mandar una instrucción desde el celular ("analizá el proyecto del turnero y bu
 
 | Fase del pedido original | Estado |
 |---|---|
-| Streaming de pantalla en vivo | ✅ Mejorado (Prioridad 3) — espejo de pantalla con varios cuadros/seg, activado solo mientras se está mirando. WebRTC evaluado y descartado por ahora: requeriría un TURN server (pago) para funcionar de forma confiable en redes con NAT/CGNAT — ver `docs/ARCHITECTURE.md` sección 5. Falta: control remoto de mouse/teclado |
+| Streaming de pantalla en vivo | ✅ Mejorado (Prioridad 3) — espejo de pantalla con varios cuadros/seg, activado solo mientras se está mirando. WebRTC evaluado y descartado por ahora: requeriría un TURN server (pago) para funcionar de forma confiable en redes con NAT/CGNAT — ver `docs/ARCHITECTURE.md` sección 5. |
+| Control remoto de mouse (click) | ✅ Hecho — tocar el espejo de pantalla mueve el mouse y hace click ahí; mantener apretado hace click derecho. Interruptor maestro `remote_control_enabled` en `config.yaml` del agente (default `false`), y solo actúa mientras alguien está efectivamente mirando esa pantalla. Ver [`agent/remote_control.py`](agent/remote_control.py). Falta: teclado, drag, scroll |
 | Modo autónomo con niveles 0-3 y checkpoints de plan | Roadmap — hoy el `autonomy_level` se guarda en la sesión pero el orquestador siempre pide confirmación según el motor de permisos, no hay "modo autónomo dentro de límites" todavía |
 | Modo Explicar | ✅ Hecho — preguntas sobre una acción puntual ya ejecutada (qué hizo, por qué, cómo explicarlo en una entrevista), sin acceso a herramientas ni al filesystem; ver [`backend/app/explain.py`](backend/app/explain.py) y [`frontend/src/components/ActionsPanel.tsx`](frontend/src/components/ActionsPanel.tsx) |
 | Modo Entrevista / Modo Freelance | Roadmap — son prompts especializados sobre la misma arquitectura, no requieren cambios estructurales |
@@ -33,7 +34,8 @@ Mandar una instrucción desde el celular ("analizá el proyecto del turnero y bu
 | Historial completo con reapertura de sesiones pausadas | Parcial — las sesiones y mensajes ya se persisten en SQLite; falta la UI de "volver a entrar y ver qué pasó mientras no estabas" |
 | Registro de múltiples PCs / múltiples proyectos por PC | ✅ Hecho (Prioridad 1) — selector explícito en el celular, ver [`frontend/src/components/PickerSheet.tsx`](frontend/src/components/PickerSheet.tsx) |
 | Acceso remoto fuera de la LAN, con HTTPS/WSS | ✅ Hecho (Prioridad 2) — Cloudflare Tunnel, ver [`docs/REMOTE_ACCESS.md`](docs/REMOTE_ACCESS.md) |
-| Testing automatizado, revocación de dispositivos desde la UI | Roadmap |
+| Testing automatizado | Parcial — `agent/tests/` cubre el mapeo de coordenadas y el interruptor de seguridad de `remote_control.py` (`cd agent && pytest`). El resto del backend/frontend todavía no tiene suite propia |
+| Revocación de dispositivos desde la UI | Roadmap |
 
 ## Puesta en marcha (desarrollo local)
 
@@ -107,7 +109,7 @@ Ver la tabla completa de comparación de arquitecturas y stack en [`docs/ARCHITE
 
 **Muy útiles** (roadmap corto): selector de proyecto/device en la UI, notificaciones push reales, reapertura de sesión con resumen de "qué pasó mientras no estabas", modo Explicar (pedirle a Claude que explique en lenguaje simple lo que acaba de hacer — es un prompt, no requiere infraestructura nueva).
 
-**Futuras**: espejo de pantalla en video (WebRTC) + control remoto de mouse/teclado, modo autónomo por niveles con checkpoints de plan, modo Entrevista, modo Freelance.
+**Futuras**: espejo de pantalla en video (WebRTC), teclado/drag/scroll remoto, modo autónomo por niveles con checkpoints de plan, modo Entrevista, modo Freelance.
 
 ## Por qué es un buen proyecto de portfolio
 

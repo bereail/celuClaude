@@ -51,9 +51,7 @@ export function MicButton({ onResult, disabled }: Props) {
 
   return (
     <button
-      onPointerDown={start}
-      onPointerUp={stop}
-      onPointerLeave={stop}
+      onClick={listening ? stop : start}
       disabled={disabled}
       className={`h-14 w-14 rounded-full flex items-center justify-center text-2xl transition-colors select-none ${
         listening ? "bg-accent animate-pulse" : "bg-panel"

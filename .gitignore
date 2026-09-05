@@ -19,6 +19,7 @@ agent/agent_audit.log
 frontend/node_modules/
 frontend/dist/
 frontend/.env
+frontend/.env.development
 frontend/tsconfig.tsbuildinfo
 
 # Cloudflare Tunnel (contiene el hostname/tunnel id real de cada usuario)

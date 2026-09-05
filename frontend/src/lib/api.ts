@@ -43,21 +43,34 @@ export function setUnauthorizedHandler(handler: (() => void) | null) {
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = getToken();
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(options.headers ?? {}),
-    },
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(options.headers ?? {}),
+      },
+    });
+  } catch {
+    // fetch() rechaza antes de llegar al servidor: sin conexion, DNS,
+    // certificado, CORS bloqueado, etc. -- distinto de un error HTTP real.
+    throw new Error("No se pudo conectar con el servidor. Revisá tu conexión.");
+  }
   if (!res.ok) {
     if (res.status === 401 && path !== "/auth/login") {
       setToken(null);
       onUnauthorized?.();
     }
     const body = await res.text();
-    throw new Error(`${res.status}: ${body}`);
+    let detail = body;
+    try {
+      detail = JSON.parse(body).detail ?? body;
+    } catch {
+      /* body no era JSON, se usa tal cual */
+    }
+    throw new Error(detail || `Error ${res.status}`);
   }
   if (res.status === 204) return undefined as T;
   return res.json();

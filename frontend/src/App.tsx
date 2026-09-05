@@ -232,7 +232,15 @@ export default function App() {
       </div>
 
       {view === "activity" && <ActivityStream events={activity} working={working} />}
-      {view === "screen" && <ScreenMirror imageB64={screenshot} lastFrameAt={lastFrameAt} />}
+      {view === "screen" && (
+        <ScreenMirror
+          imageB64={screenshot}
+          lastFrameAt={lastFrameAt}
+          onRemoteClick={
+            device ? (x, y, button) => socketRef.current?.send({ type: "remote_click", device_id: device.id, x, y, button }) : undefined
+          }
+        />
+      )}
       {view === "actions" && <ActionsPanel sessionId={sessionId} />}
 
       {approval && <ApprovalSheet request={approval} onDecide={decide} />}

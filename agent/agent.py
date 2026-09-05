@@ -23,6 +23,7 @@ import websockets
 import yaml
 
 from executor import execute_tool
+from remote_control import RemoteControlDisabled, click as remote_click
 
 CONFIG_PATH = Path(__file__).resolve().parent / "config.yaml"
 
@@ -148,6 +149,19 @@ async def handle_messages(ws, cfg: dict, streaming_active: asyncio.Event):
         elif msg_type == "screen_unsubscribe":
             streaming_active.clear()
             print("[agent] espejo de pantalla: pausado (nadie esta mirando)")
+
+        elif msg_type == "remote_click":
+            # Nunca mover el mouse a ciegas: solo mientras alguien esta
+            # efectivamente mirando el espejo de pantalla en este momento.
+            if not streaming_active.is_set():
+                continue
+            try:
+                result = remote_click(msg.get("x", 0.5), msg.get("y", 0.5), msg.get("button", "left"), cfg)
+                await ws.send(json.dumps({"type": "activity", "text": f"click remoto ({result['button']}) en ({result['x']},{result['y']})"}))
+            except RemoteControlDisabled as exc:
+                print(f"[agent] click remoto rechazado: {exc}")
+            except Exception as exc:
+                print(f"[agent] error en click remoto: {exc}")
 
 
 async def run():
