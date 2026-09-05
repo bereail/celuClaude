@@ -1,0 +1,62 @@
+# Copiar a config.yaml. Este archivo es la capa 2 de permisos: el agente
+# vuelve a validar cada accion aunque el backend ya la haya aprobado, para
+# que un backend comprometido no pueda hacer que el agente haga cualquier cosa.
+
+server_url: "ws://localhost:8000"
+enrollment_token: "change-me-enrollment-token"
+device_name: "PC de Bere"
+device_id: ""     # se completa solo despues del primer registro exitoso
+device_token: ""  # idem — es el secreto que prueba que sos VOS reconectando con ese device_id, nunca lo compartas
+
+allowed_roots:
+  - "D:\\Bere\\GIT"
+  - "C:\\Projects"
+
+allowed_commands:
+  - python
+  - pytest
+  - git
+  - npm
+  - node
+  - dir
+
+# Comandos que el backend ya hizo confirmar al usuario antes de llegar aca;
+# el agente los deja pasar SOLO si vienen acompañados de una autorizacion
+# valida (ver ws de aprobacion), nunca en modo "allow" directo.
+confirm_commands:
+  - pip install
+  - npm install
+  - git push
+  - git commit
+  - rm
+  - del
+  - rmdir
+
+deny_path_patterns:
+  - "*.env"
+  - "*.env.*"
+  - "*password*"
+  - "*credentials*"
+  - "*.pem"
+  - "*.key"
+  - "*id_rsa*"
+  - "*cookies*"
+  - "*.pfx"
+  - "*wallet*"
+
+max_write_bytes: 2000000
+command_timeout_seconds: 120
+
+# Modo A - espejo de pantalla (screenshots frecuentes, no video real -- ver
+# docs/ARCHITECTURE.md seccion 5 para por que no es WebRTC en esta version).
+# Interruptor maestro: si esta en false, el celular NUNCA puede activar el
+# streaming aunque lo pida (ver tambien screen_subscribe/unsubscribe, que es
+# el control por sesion -- este es el control de "ni siquiera ofrecerlo").
+screenshot_enabled: false
+# Segundos entre cuadros MIENTRAS hay alguien mirando. 0.4 = ~2.5 cuadros/seg,
+# un buen equilibrio entre "se siente en vivo" y uso de CPU/red. Los cuadros
+# identicos al anterior no se reenvian, asi que en una pantalla quieta el
+# consumo real es minimo aunque el numero de aca sea bajo.
+screenshot_interval_seconds: 0.4
+screenshot_max_width: 900
+screenshot_quality: 55

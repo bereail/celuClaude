@@ -1,0 +1,39 @@
+# Copiar a permissions.yaml y ajustar. Este archivo define que puede
+# hacer Claude a traves del agente. Se evalua en el backend (capa 1) y
+# de nuevo en el agente local (capa 2, ver agent/config.example.yaml).
+
+allowed_roots:
+  - "D:\\Bere\\GIT"
+  - "C:\\Projects"
+
+allowed_commands:
+  - python
+  - pytest
+  - git
+  - npm
+  - node
+  - dir
+  - ls
+
+confirm_commands:
+  - pip install
+  - npm install
+  - git push
+  - git commit
+  - rm
+  - del
+  - rmdir
+
+deny_path_patterns:
+  - "*.env"
+  - "*.env.*"
+  - "*password*"
+  - "*credentials*"
+  - "*.pem"
+  - "*.key"
+  - "*id_rsa*"
+  - "*cookies*"
+  - "*.pfx"
+  - "*wallet*"
+
+max_write_bytes: 2000000

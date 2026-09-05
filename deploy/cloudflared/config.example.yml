@@ -1,0 +1,18 @@
+# Config de Cloudflare Tunnel (tunel con nombre, URL estable).
+#
+# Copiar a config.yml (mismo directorio) y completar:
+#   1. `tunnel` y `credentials-file`: los completa automaticamente
+#      `cloudflared tunnel create celu-command-center` (ver docs/REMOTE_ACCESS.md).
+#   2. `hostname`: el subdominio que vas a usar, ej. celu.ailonline.com.ar
+
+tunnel: <TUNNEL_ID>
+credentials-file: C:\Users\<TU_USUARIO>\.cloudflared\<TUNNEL_ID>.json
+
+ingress:
+  # Todo el trafico (HTTP normal + WebSocket) va al backend local.
+  # cloudflared detecta y proxea WebSocket automaticamente, no hace falta
+  # configuracion aparte para /ws/mobile y /ws/agent.
+  - hostname: celu.ailonline.com.ar
+    service: http://localhost:8000
+  # Catch-all obligatorio: cualquier otro hostname que llegue se rechaza.
+  - service: http_status:404

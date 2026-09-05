@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# Backend runtime
+backend/.env
+backend/permissions.yaml
+backend/*.db
+
+# Agent runtime
+agent/config.yaml
+agent/.venv/
+agent/agent_audit.log
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/tsconfig.tsbuildinfo
+
+# Cloudflare Tunnel (contiene el hostname/tunnel id real de cada usuario)
+deploy/cloudflared/config.yml
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,6 @@
+websockets==13.0
+psutil==6.0.0
+mss==9.0.2
+Pillow==10.4.0
+PyYAML==6.0.2
+python-dotenv==1.0.1
