@@ -75,13 +75,20 @@ esta prueba.
 
 ### 6. Dejarlo corriendo siempre (como servicio de Windows)
 
+Abrir PowerShell **como Administrador** (instalar un servicio de Windows lo
+requiere) y usar la **ruta absoluta** al config — el servicio no arranca
+parado en la carpeta del proyecto, así que una ruta relativa (`deploy\...`)
+no resuelve después de un reinicio:
+
 ```powershell
-cloudflared service install --config deploy\cloudflared\config.yml
+& "C:\Program Files (x86)\cloudflared\cloudflared.exe" --config "D:\Bere\GIT\celuClaude\deploy\cloudflared\config.yml" service install
+Start-Service Cloudflared
+Get-Service Cloudflared   # tiene que decir Status: Running, StartType: Automatic
 ```
 
-Esto lo deja corriendo en segundo plano y arrancando solo con Windows, sin
-depender de tener una terminal abierta. Para desinstalarlo: `cloudflared
-service uninstall`.
+Esto lo deja corriendo en segundo plano y arrancando solo con Windows (antes
+de loguearse, incluso), sin depender de tener una terminal abierta. Para
+desinstalarlo: `cloudflared service uninstall` (también como Administrador).
 
 ## Antes de dejarlo expuesto de forma permanente — checklist de seguridad
 
