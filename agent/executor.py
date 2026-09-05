@@ -22,23 +22,13 @@ import fnmatch
 import os
 import platform
 import subprocess
-from datetime import datetime, timezone
 from pathlib import Path
 
-AUDIT_LOG_PATH = Path(__file__).resolve().parent / "agent_audit.log"
+from audit import audit as _audit
 
 
 class PermissionDenied(Exception):
     pass
-
-
-def _audit(line: str) -> None:
-    ts = datetime.now(timezone.utc).isoformat()
-    try:
-        with open(AUDIT_LOG_PATH, "a", encoding="utf-8") as f:
-            f.write(f"{ts} {line}\n")
-    except OSError:
-        pass  # el audit log local es best-effort, nunca debe tumbar al agente
 
 
 def _path_denied(path: str, cfg: dict) -> bool:

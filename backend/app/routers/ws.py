@@ -197,9 +197,15 @@ async def agent_ws(websocket: WebSocket):
     except (WebSocketDisconnect, asyncio.TimeoutError):
         pass
     finally:
-        hub.unregister_agent(device.id)
+        # device.id se guarda ANTES de commit/close: el commit expira los
+        # atributos del objeto (expire_on_commit=True por defecto), y leer
+        # device.id despues de cerrar la sesion tira DetachedInstanceError
+        # -- eso hacia que este aviso de "device offline" nunca le llegara
+        # a los celulares conectados.
+        device_id = device.id
+        hub.unregister_agent(device_id)
         device.status = "offline"
         device.last_seen = datetime.now(timezone.utc)
         db.commit()
         db.close()
-        await hub.broadcast_to_mobile({"type": "device_status", "device_id": device.id, "status": "offline"})
+        await hub.broadcast_to_mobile({"type": "device_status", "device_id": device_id, "status": "offline"})

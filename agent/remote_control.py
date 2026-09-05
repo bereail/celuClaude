@@ -15,24 +15,12 @@ forma local (nunca confia ciegamente en que el backend ya valido algo):
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from pathlib import Path
-
 import mss
 import pyautogui
 
+from audit import audit as _audit
+
 pyautogui.FAILSAFE = True  # mover el mouse a una esquina lo aborta -- lo dejamos activo a proposito
-
-AUDIT_LOG_PATH = Path(__file__).resolve().parent / "agent_audit.log"
-
-
-def _audit(line: str) -> None:
-    ts = datetime.now(timezone.utc).isoformat()
-    try:
-        with open(AUDIT_LOG_PATH, "a", encoding="utf-8") as f:
-            f.write(f"{ts} {line}\n")
-    except OSError:
-        pass
 
 
 def get_capture_monitor() -> dict:

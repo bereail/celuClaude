@@ -34,7 +34,7 @@ Mandar una instrucción desde el celular ("analizá el proyecto del turnero y bu
 | Historial completo con reapertura de sesiones pausadas | Parcial — las sesiones y mensajes ya se persisten en SQLite; falta la UI de "volver a entrar y ver qué pasó mientras no estabas" |
 | Registro de múltiples PCs / múltiples proyectos por PC | ✅ Hecho (Prioridad 1) — selector explícito en el celular, ver [`frontend/src/components/PickerSheet.tsx`](frontend/src/components/PickerSheet.tsx) |
 | Acceso remoto fuera de la LAN, con HTTPS/WSS | ✅ Hecho (Prioridad 2) — Cloudflare Tunnel, ver [`docs/REMOTE_ACCESS.md`](docs/REMOTE_ACCESS.md) |
-| Testing automatizado | Parcial — `agent/tests/` cubre el mapeo de coordenadas y el interruptor de seguridad de `remote_control.py` (`cd agent && pytest`). El resto del backend/frontend todavía no tiene suite propia |
+| Testing automatizado | Parcial — cubre lo mas sensible en seguridad de cada capa: **agent** (`cd agent && pytest`) motor de permisos de `executor.py` y control remoto de mouse; **backend** (`cd backend && pytest`) motor de permisos, JWT, login/rate-limit, y que un `remote_click` por WS solo se relaya si el usuario esta suscripto a esa pantalla; **frontend** (`cd frontend && npm test`) manejo de errores de `api.ts` (el bug de esta sesion: no confundir "sin conexion" con "credenciales invalidas"). No cubre componentes React ni flujos end-to-end |
 | Revocación de dispositivos desde la UI | Roadmap |
 
 ## Puesta en marcha (desarrollo local)
