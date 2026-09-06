@@ -1,5 +1,8 @@
 # Claude Command Center
 
+[![tests](https://github.com/bereail/celuClaude/actions/workflows/tests.yml/badge.svg)](https://github.com/bereail/celuClaude/actions/workflows/tests.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Centro de comando remoto para dirigir y supervisar a Claude trabajando en tu propia computadora, desde el celular — no es un chatbot, es un panel de control con streaming de actividad, permisos y auditoría.
 
 ```
@@ -34,7 +37,7 @@ Mandar una instrucción desde el celular ("analizá el proyecto del turnero y bu
 | Historial completo con reapertura de sesiones pausadas | Parcial — las sesiones y mensajes ya se persisten en SQLite; falta la UI de "volver a entrar y ver qué pasó mientras no estabas" |
 | Registro de múltiples PCs / múltiples proyectos por PC | ✅ Hecho (Prioridad 1) — selector explícito en el celular, ver [`frontend/src/components/PickerSheet.tsx`](frontend/src/components/PickerSheet.tsx) |
 | Acceso remoto fuera de la LAN, con HTTPS/WSS | ✅ Hecho (Prioridad 2) — Cloudflare Tunnel, ver [`docs/REMOTE_ACCESS.md`](docs/REMOTE_ACCESS.md) |
-| Testing automatizado | Parcial — cubre lo mas sensible en seguridad de cada capa: **agent** (`cd agent && pytest`) motor de permisos de `executor.py` y control remoto de mouse; **backend** (`cd backend && pytest`) motor de permisos, JWT, login/rate-limit, y que un `remote_click` por WS solo se relaya si el usuario esta suscripto a esa pantalla; **frontend** (`cd frontend && npm test`) manejo de errores de `api.ts` (el bug de esta sesion: no confundir "sin conexion" con "credenciales invalidas"). No cubre componentes React ni flujos end-to-end |
+| Testing automatizado | Parcial — ver seccion [Tests](#tests) mas abajo. Corre en CI en cada push. No cubre componentes React ni flujos end-to-end |
 | Revocación de dispositivos desde la UI | Roadmap |
 
 ## Puesta en marcha (desarrollo local)
@@ -98,6 +101,16 @@ Ver [`docs/REMOTE_ACCESS.md`](docs/REMOTE_ACCESS.md) — Cloudflare Tunnel, grat
 - Tres niveles: **DENY** (secretos, fuera de directorio autorizado — nunca, ni con confirmación), **CONFIRM** (requiere aprobación explícita desde el celular, con "permitir siempre" auditable), **ALLOW** (allowlist explícita de binarios).
 - JWT de acceso de vida corta + refresh token; el token del agente (`enrollment_token`) es distinto del token de usuario del celular — comprometer uno no compromete el otro.
 - Toda acción queda en `action_log` con decisión, resultado y timestamp — audit log completo, no borrable desde la UI.
+
+## Tests
+
+```bash
+cd backend && pytest tests/ -v      # motor de permisos, JWT, login/rate-limit, seguridad del click remoto por WS
+cd agent && pytest tests/ -v        # motor de permisos del agente, mapeo de coordenadas del control remoto
+cd frontend && npm test             # manejo de errores de la capa de API (vitest)
+```
+
+Corren automaticamente en cada push via GitHub Actions ([`.github/workflows/tests.yml`](.github/workflows/tests.yml)). No cubren componentes React ni flujos end-to-end todavia — ver la tabla de roadmap para el detalle de que falta.
 
 ## Stack y por qué
 
