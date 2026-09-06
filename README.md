@@ -37,7 +37,7 @@ Mandar una instrucción desde el celular ("analizá el proyecto del turnero y bu
 | Historial completo con reapertura de sesiones pausadas | Parcial — las sesiones y mensajes ya se persisten en SQLite; falta la UI de "volver a entrar y ver qué pasó mientras no estabas" |
 | Registro de múltiples PCs / múltiples proyectos por PC | ✅ Hecho (Prioridad 1) — selector explícito en el celular, ver [`frontend/src/components/PickerSheet.tsx`](frontend/src/components/PickerSheet.tsx) |
 | Acceso remoto fuera de la LAN, con HTTPS/WSS | ✅ Hecho (Prioridad 2) — Cloudflare Tunnel, ver [`docs/REMOTE_ACCESS.md`](docs/REMOTE_ACCESS.md) |
-| Testing automatizado | Parcial — ver seccion [Tests](#tests) mas abajo. Corre en CI en cada push. No cubre componentes React ni flujos end-to-end |
+| Testing automatizado | Parcial — ver sección [Tests](#tests) más abajo. Corre en CI en cada push. No cubre componentes React ni flujos end-to-end |
 | Revocación de dispositivos desde la UI | Roadmap |
 
 ## Puesta en marcha (desarrollo local)
@@ -110,7 +110,7 @@ cd agent && pytest tests/ -v        # motor de permisos del agente, mapeo de coo
 cd frontend && npm test             # manejo de errores de la capa de API (vitest)
 ```
 
-Corren automaticamente en cada push via GitHub Actions ([`.github/workflows/tests.yml`](.github/workflows/tests.yml)). No cubren componentes React ni flujos end-to-end todavia — ver la tabla de roadmap para el detalle de que falta.
+Corren automáticamente en cada push vía GitHub Actions ([`.github/workflows/tests.yml`](.github/workflows/tests.yml)). No cubren componentes React ni flujos end-to-end todavía — ver la tabla de roadmap para el detalle de qué falta.
 
 ## Stack y por qué
 
